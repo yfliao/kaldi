@@ -4,10 +4,17 @@
 
 The main purpose of this project is to boost the development of Taiwan-specific speech recognition techniques. We will continue to collect, transcribe, release corpora and baseline recipes for everyone, especially for students.
 
-*  Her is the first wave of FSW corpus (NER: National Education Radio @ Taiwan)
+###  The first wave of FSW corpus (NER: National Education Radio @ Taiwan)
 
     |Corpus|Abbreviation|Source|Hours|Remark|
     |:---|:---|:---:|---:|:--|
     |NER Manual Transcription corpus Vol. 1|NER-Trs-Vol1 |NER| 107.4 | manual, word sequences|
 
 This corpus can be applied for Non-Commenrical Use Only. For more details, please visit [Formosa Speech in the Wild (FSW)](https://sites.google.com/speech.ntut.edu.tw/fsw) project.
+
+### Contact
+Yuan-Fu Liao (廖元甫)  
+Associate Professor, Department of electronic Engineering, National Taipei University of Technology  
+http://www.ntut.edu.tw/~yfliao  
+yfliao@mail.ntut.edu.tw  
+
