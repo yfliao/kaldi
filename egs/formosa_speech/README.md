@@ -6,9 +6,9 @@ The main purpose of this project is to boost the development of Taiwan-specific 
 
 ###  The first wave of FSW corpus (NER: National Education Radio @ Taiwan)
 
-    |Corpus|Abbreviation|Source|Hours|Remark|
-    |:---|:---|:---:|---:|:--|
-    |NER Manual Transcription corpus Vol. 1|NER-Trs-Vol1 |NER| 107.4 | manual, word sequences|
+|Corpus|Abbreviation|Source|Hours|Remark|
+|:---|:---|:---:|---:|:--|
+|NER Manual Transcription corpus Vol. 1|NER-Trs-Vol1 |NER| 107.4 | manual, word sequences|
 
 This corpus can be applied for Non-Commenrical Use Only. For more details, please visit [Formosa Speech in the Wild (FSW)](https://sites.google.com/speech.ntut.edu.tw/fsw) project.
 
