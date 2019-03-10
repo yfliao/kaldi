@@ -9,6 +9,10 @@
 stage=-2
 num_jobs=20
 
+train_dir=NER-Trs-Vol1/Train
+eval_dir=NER-Trs-Vol1-Eval
+eval_key_dir=NER-Trs-Vol1-Eval-Key
+
 # shell options
 set -eo pipefail
 
@@ -25,7 +29,7 @@ if [ $stage -le -2 ]; then
 
   # Data Preparation
   echo "$0: Data Preparation"
-  local/prepare_data.sh || exit 1;
+  local/prepare_data.sh --trian-dir $train_dir --eval-dir $eval_dir --eval-key-dir $eval_key_dir || exit 1;
 
   # Phone Sets, questions, L compilation
   echo "$0: Phone Sets, questions, L compilation Preparation"
@@ -54,7 +58,7 @@ mfccdir=mfcc
 if [ $stage -le -1 ]; then
 
   echo "$0: making mfccs"
-  for x in train test; do
+  for x in train test eval; do
     steps/make_mfcc_pitch.sh --cmd "$train_cmd" --nj $num_jobs data/$x exp/make_mfcc/$x $mfccdir || exit 1;
     steps/compute_cmvn_stats.sh data/$x exp/make_mfcc/$x $mfccdir || exit 1;
     utils/fix_data_dir.sh data/$x || exit 1;
@@ -229,18 +233,18 @@ fi
 
 # getting results (see RESULTS file)
 if [ $stage -le 10 ]; then
-
   echo "$0: extract the results"
-  echo "WER: test"
-  for x in exp/*/decode_test*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done 2>/dev/null
-  for x in exp/*/*/decode_test*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done 2>/dev/null
+  for test_set in test eval; do
+  echo "WER: $test_set"
+  for x in exp/*/decode_${test_set}*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done 2>/dev/null
+  for x in exp/*/*/decode_${test_set}*; do [ -d $x ] && grep WER $x/wer_* | utils/best_wer.sh; done 2>/dev/null
   echo
 
-  echo "CER: test"
-  for x in exp/*/decode_test*; do [ -d $x ] && grep WER $x/cer_* | utils/best_wer.sh; done 2>/dev/null
-  for x in exp/*/*/decode_test*; do [ -d $x ] && grep WER $x/cer_* | utils/best_wer.sh; done 2>/dev/null
+  echo "CER: $test_set"
+  for x in exp/*/decode_${test_set}*; do [ -d $x ] && grep WER $x/cer_* | utils/best_wer.sh; done 2>/dev/null
+  for x in exp/*/*/decode_${test_set}*; do [ -d $x ] && grep WER $x/cer_* | utils/best_wer.sh; done 2>/dev/null
   echo
-
+  done
 fi
 
 # finish
