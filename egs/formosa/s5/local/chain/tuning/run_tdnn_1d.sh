@@ -1,17 +1,16 @@
 #!/bin/bash
 
 # CER:
-# %WER 16.44 [ 35459 / 215718, 4216 ins, 11278 del, 19965 sub ] exp/chain/tdnn_1b_sp/decode_test/cer_10_0.0
-# %WER 13.72 [ 29605 / 215718, 4678 ins, 8066 del, 16861 sub ] exp/chain/tdnn_1c_sp/decode_test/cer_10_0.0
+# 1a: %WER 16.83 [ 36305 / 215718, 4772 ins, 10810 del, 20723 sub ] exp/chain/tdnn_1a_sp/decode_test/cer_9_0.0
+# 1d: %WER 14.08 [ 30364 / 215718, 5182 ins, 7588 del, 17594 sub ] exp/chain/tdnn_1d_sp/decode_test/cer_9_0.0
 
-# steps/info/chain_dir_info.pl exp/chain/tdnn_1c_sp
-# exp/chain/tdnn_1c_sp: num-iters=147 nj=3..16 num-params=17.9M dim=43+100->4528 combine=-0.041->-0.041 (over 2) xent:train/valid[97,146,final]=(-0.845,-0.625,-0.618/-0.901,-0.710,-0.703) logprob:train/valid[97,146,final]=(-0.064,-0.040,-0.039/-0.072,-0.058,-0.057)
+# steps/info/chain_dir_info.pl exp/chain/tdnn_1d_sp
+# exp/chain/tdnn_1d_sp: num-iters=157 nj=3..16 num-params=18.6M dim=43+100->5792 combine=-0.050->-0.050 (over 1) xent:train/valid[103,156,final]=(-0.977,-0.735,-0.725/-0.953,-0.772,-0.768) logprob:train/valid[103,156,final]=(-0.077,-0.052,-0.052/-0.079,-0.065,-0.066)
 
 set -e
 
 # configs for 'chain'
-affix=1c
-nnet3_affix=_1b
+affix=1d
 stage=0
 train_stage=-10
 get_egs_stage=-10
@@ -53,15 +52,15 @@ fi
 # run those things.
 
 dir=${dir}${affix:+_$affix}_sp
-train_set=train_cleaned_sp
-ali_dir=exp/tri5a_cleaned_sp_ali
-treedir=exp/chain/tri6a_cleaned_tree_sp
+train_set=train_sp
+ali_dir=exp/tri5a_sp_ali
+treedir=exp/chain/tri6a_tree_sp
 lang=data/lang_chain
 
 
 # if we are using the speed-perturbed data we need to generate
 # alignments for it.
-local/nnet3/run_ivector_common.sh --stage $stage --train-set train_cleaned --gmm tri5a_cleaned --nnet3-affix $nnet3_affix
+local/nnet3/run_ivector_common.sh --stage $stage --train-set train --gmm tri5a ${nnet3_affix:+ --nnet3-affix $nnet3_affix}
 
 if [ $stage -le 7 ]; then
   # Get the alignments as lattices (gives the LF-MMI training more freedom).
@@ -90,7 +89,7 @@ if [ $stage -le 9 ]; then
   # step compared with other recipes.
   steps/nnet3/chain/build_tree.sh --frame-subsampling-factor 3 \
       --context-opts "--context-width=2 --central-position=1" \
-      --cmd "$train_cmd" 5000 data/$train_set $lang $ali_dir $treedir
+      --cmd "$train_cmd" 7000 data/$train_set $lang $ali_dir $treedir
 fi
 
 if [ $stage -le 10 ]; then
